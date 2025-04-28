@@ -1,0 +1,32 @@
+name: License Scan
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install ScanCode Toolkit
+        run: |
+          git clone https://github.com/nexB/scancode-toolkit.git
+          cd scancode-toolkit
+          ./scancode --version
+
+      - name: Run ScanCode
+        run: |
+          cd scancode-toolkit
+          ./scancode --license --json-pp ../scancode-results.json ../
+
